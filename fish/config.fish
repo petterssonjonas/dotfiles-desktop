@@ -47,5 +47,5 @@ alias sudp="sudo"
 tput smkx
 
 
-neofetch
-
+#neofetch
+paleofetch

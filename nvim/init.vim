@@ -21,6 +21,10 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Plug 'davidhalter/jedi-vim'
 " Coc intellisense completion like VScode https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'pangloss/vim-javascript', {'branch': 'master'}
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
+
 Plug 'psf/black', { 'branch': 'stable' } " :Black autoformater https://github.com/psf/black
 "" color previews from coc-highlight. Good alt: https://github.com/ap/vim-css-color
 "" Themes {
@@ -81,6 +85,7 @@ call plug#end()
 
 syntax enable
 filetype indent on
+set clipboard=unnamedplus
 set cursorline 
 set cmdheight=1
 set hidden
@@ -121,7 +126,7 @@ set noswapfile
 
 "" Sets delay between pressing leader and window popping.
 "" So you can use a leader command before menu pops.
-set timeoutlen=250
+set timeoutlen=200
 "set fillchars+=vert:\ " Set split separator char. default |
 "colorscheme miramare
 colorscheme gruvbox 
@@ -162,7 +167,6 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 
 
 function! s:check_back_space() abort
@@ -258,11 +262,14 @@ let g:leaderMenu = {'name':                         "Global Menu",
              \'v': [':vsplit',                      'Split buffer vertically'],
              \'h': [':split',                       'Split buffer horizontally'],
              \'n': [':NERDTreeToggle',              'ToggleNERDtree'],
-             \'r': [':Farr',                        'Search and Replace'],
+             \'p': [':Farr',                        'Search and Replace'],
+             \'r': [':retab',                       ':retab tabspaces => spaces'],
              \'s': [':Search',                      'Search'],
              \'d': [':bd',                          'Close buffer'],
              \'l': [':ls',                          'List opened buffers'],
-             \'q': [':q!',                          'Quit Nvim without saving(:q!)'],
+             \'q': [':q',                           'Quit Nvim (:q)'],
+             \'<': [':foldclose',                   'Close fold (<)'],
+             \'>': [':foldopen',                    'Open fold (>)'],
              \'w': [':w',                           'Save file (:w)'],
              \'t': [':split term://fish',           'Open Term in vsplit'],
              \'z': [':set foldlevel=1000',          'Open all folds'],
