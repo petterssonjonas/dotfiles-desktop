@@ -2,7 +2,7 @@
 "" |  ___|   _ _______| |__   _____  __
 "" | |_ | | | |_  / _ \ '_ \ / _ \ \/ /     NeoVIM config file.
 "" |  _|| |_| |/ /  __/ |_) | (_) >  <      ~/.config/nvim/init.vim
-"" |_|   \__,_/___\___|_.__/ \___/_/\_\     (This file may not be read on Arch by default. RTFM.)
+"" |_|   \__,_/___\___|_.__/ \___/_/\_\     (This file may not be read by nvim config on Arch by default. RTFM.)
 """
 """ This config requires vim-plug. Install it first with the following command:
 "" curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
@@ -24,7 +24,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'pangloss/vim-javascript', {'branch': 'master'}
 Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
-
 Plug 'psf/black', { 'branch': 'stable' } " :Black autoformater https://github.com/psf/black
 "" color previews from coc-highlight. Good alt: https://github.com/ap/vim-css-color
 "" Themes {
@@ -39,7 +38,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons' "https://github.com/ryanoasis/vim-devicons
 Plug 'brooth/far.vim'
 Plug 'vim-scripts/MultipleSearch'
-
+Plug 'tpope/vim-fugitive' " :Git
 
 Plug 'jiangmiao/auto-pairs' " Pairs () [] {} '' etc https://github.com/jiangmiao/auto-pairs
 Plug 'vimwiki/vimwiki' " https://github.com/vimwiki/vimwiki
@@ -59,7 +58,7 @@ let g:leaderMapperWidth = 30
 let g:vimwiki_list = [{'path': '~/.vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 
-let g:miramare_transparent_background = 0
+let g:miramare_transparent_background = 1
 let g:airline_theme = 'gruvbox'
 let g:miramare_enable_italic = 1
 let g:miramare_disable_italic_comment = 0
@@ -77,12 +76,12 @@ let g:highlightedyank_highlight_duration = 1000
 "let g:airline#extensions#ale#enabled = 1
 "let g:ale_sign_error = '🛑'
 "let g:ale_sign_warning = '⚠'
-" fix for OperatorMono font
-hi Comment gui=italic cterm=italic
-hi htmlArg gui=italic cterm=italic
 
 call plug#end()
 
+" fix for OperatorMono font
+" hi Comment gui=italic cterm=italic
+" hi htmlArg gui=italic cterm=italic
 syntax enable
 filetype indent on
 set clipboard=unnamedplus

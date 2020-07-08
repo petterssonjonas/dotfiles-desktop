@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Only one instance of this script is guaranteed to run.
+function run {
+  if ! pgrep -f $1 ;
+  then
+    $@&
+  fi
+}
+
+# Add desired autorun startup programs with arguments.
+mullvad-vpn
+picom
+redshift
+nitrogen --restore
+xset r rate 365 55
+dropbox
+# Use slock as X lock screen for XScreenSaver if xss-lock and slock are on $PATH.
+which xss-lock && which slock && run xss-lock slock 

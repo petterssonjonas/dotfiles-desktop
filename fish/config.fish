@@ -33,10 +33,13 @@ alias vi="nvim"
 alias vim="nvim"
 alias nvim="nvim"
 alias ..="cd .."
-alias ....="cd ../../"
+alias ...="cd ../../"
+alias ....="cd ../../../"
 alias ls="lsd --color=auto"
 alias grep="grep --color=auto"
 alias sudp="sudo"
+alias weather="curl wttr.in"
+
 
 # Use Powerline prompt
 #set fish_function_path $fish_function_path "/usr/share/powerline/bindings/fish"

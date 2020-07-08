@@ -1,3 +1,4 @@
 {
-        "python.jediEnabled": true
+        "python.jediEnabled": false,
+        "lua.commandPath": "/usr/bin/lua-lsp"
 }
