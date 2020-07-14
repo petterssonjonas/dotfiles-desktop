@@ -1,4 +1,4 @@
-""" _____              _               
+"" _____               _
 "" |  ___|   _ _______| |__   _____  __
 "" | |_ | | | |_  / _ \ '_ \ / _ \ \/ /     NeoVIM config file.
 "" |  _|| |_| |/ /  __/ |_) | (_) >  <      ~/.config/nvim/init.vim
@@ -33,7 +33,7 @@ Plug 'franbach/miramare'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 "" }
-
+Plug 'Yggdroot/indentLine'
 "Plug 'dense-analysis/ale' " Multilanguage Linting (remember to disable cocs linting)
 Plug 'ryanoasis/vim-devicons' "https://github.com/ryanoasis/vim-devicons
 Plug 'brooth/far.vim'
@@ -49,19 +49,33 @@ Plug 'machakann/vim-highlightedyank' " https://github.com/machakann/vim-highligh
 Plug 'tmhedberg/SimpylFold' "https://github.com/tmhedberg/SimpylFold
 " Allows easy commenting even mulstiline with visual mode. :Commenter
 Plug 'damofthemoon/vim-commenter' " https://github.com/damofthemoon/vim-commenter
-Plug 'junegunn/fzf' " fuzzyfinder is great.
 Plug 'damofthemoon/vim-leader-mapper' " Nice configurable menu on <leader> press. https://github.com/damofthemoon/vim-leader-mapper
+Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'yuttie/comfortable-motion.vim'
+Plug 'gcavallanti/vim-noscrollbar'
+
+let g:comfortable_motion_scroll_down_key = "j"
+let g:comfortable_motion_scroll_up_key = "k"
+"let g:comfortable_motion_no_default_key_mappings = 1
+
 let mapleader = "\<Space>"
 "" Pop up leader-bindings-window at top, bottom or center
 let g:leaderMapperPos = "bottom"
-let g:leaderMapperWidth = 30
+let g:leaderMapperWidth = 50
 let g:vimwiki_list = [{'path': '~/.vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
-
+"let g:indentLine_setColors = 0
+"let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_char = '┊' " 
 let g:miramare_transparent_background = 1
 let g:airline_theme = 'gruvbox'
-let g:miramare_enable_italic = 1
 let g:miramare_disable_italic_comment = 0
+let g:miramare_enable_italic = 1
+let g:airline#extensions#coc#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -76,22 +90,43 @@ let g:highlightedyank_highlight_duration = 1000
 "let g:airline#extensions#ale#enabled = 1
 "let g:ale_sign_error = '🛑'
 "let g:ale_sign_warning = '⚠'
-
+let g:comfortable_motion_no_default_key_mappings = 1
+let g:airline#extensions#capslock#enabled = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
+nmap <leader>- <Plug>AirlineSelectPrevTab
+nmap <leader>+ <Plug>AirlineSelectNextTab
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+let g:airline#extensions#default#section_truncate_width = { 'y': 9, }
 call plug#end()
 
-" fix for OperatorMono font
-" hi Comment gui=italic cterm=italic
-" hi htmlArg gui=italic cterm=italic
+function! Noscrollbar(...)
+"        let g:airline_section_y = '%{noscrollbar#statusline(9,''▰'',''▰'',[''▱''],[''▱''])}'
+        let g:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▐''],[''▌''])}'
+endfunction
+call airline#add_statusline_func('Noscrollbar')
+
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" fix for OperatorMono font
+hi Comment gui=italic cterm=italic
+hi htmlArg gui=italic cterm=italic
 syntax enable
 filetype indent on
 set clipboard=unnamedplus
-set cursorline 
+set cursorline
 set cmdheight=1
 set hidden
 set updatetime=300
 set shortmess+=c
 set signcolumn=yes
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 set wildmenu
 set lazyredraw
 set showmatch
@@ -110,7 +145,7 @@ set noshowmode
 set termguicolors "" Make function to check if has guicolors
 set background=dark
 set mouse=a     "" fully gui functional mouse
-set shell=sh    "" required for nerdtree to open some files?
+set shell=sh    "" required for some plugins to execute system functions.
 set splitbelow splitright
 " Set backups
 if has('persistent_undo')
@@ -122,13 +157,16 @@ set backupdir=~/.local/share/nvim/backup " Don't put backups in current dir
 set backup
 set noswapfile
 
+"" Soft scrolling comfortable_motion.vim
+nnoremap <silent> <PageDown> :call comfortable_motion#flick(100)<CR>
+nnoremap <silent> <PageUp> :call comfortable_motion#flick(-100)<CR>
 
 "" Sets delay between pressing leader and window popping.
 "" So you can use a leader command before menu pops.
 set timeoutlen=200
 "set fillchars+=vert:\ " Set split separator char. default |
 "colorscheme miramare
-colorscheme gruvbox 
+colorscheme gruvbox
 "" Background colors for active vs inactive windows
 hi ActiveWindow guibg=#282828
 hi InactiveWindow guibg=#1D2021
@@ -174,7 +212,7 @@ function! s:check_back_space() abort
 endfunction
 
 noremap <C-n> :NERDTreeToggle<CR>
-"" Splits navigation, saving a keypress:
+"" Navigating splits, saving a keypress: Ctrl-hjkl
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
@@ -221,7 +259,7 @@ augroup nerdtree_open_if_dir
         autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 augroup END
 "" Broken when opening some .c and .py files from empty vim? lint plugin problem?
-"augroup nerdtree_close_nerdtree_on_opening_file 
+"augroup nerdtree_close_nerdtree_on_opening_file
 "        autocmd BufEnter NERD_tree_* nmap  d<CR> <CR> :NERDTreeToggle <CR>
 "        autocmd BufLeave NERD_tree_* unmap d<CR>
 "augroup END
@@ -245,40 +283,42 @@ let g:Tlist_WinWidth = 20
 "" vim-leader-mapper options
 
 "" Create a window of bindings. First a submenu for fuzzysearch.:
-" let fzfMenu = {'name':                            "FZF Menu",
-             " \'f': [":Files",                     "FZF file search"],
-             " \'b': [":Buffers",                   "FZF buffer search"],
-             " \'s': [":BLines",                    "FZF text search into current buffer"],
-             " \'S': [":Lines",                     "FZF text search across loaded buffers"],
-             " \'g': [":BCommits",                  "FZF git commits of the current buffer"],
-             " \'G': [":Commits",                   "FZF git commits of the repository"],
-             " \}
-             "
-             " Define the menu content including the above menu
+let fzfMenu = {'name':               "FZF Menu",
+\'f': [":Files",                     "FZF file search"],
+\'b': [":Buffers",                   "FZF buffer search"],
+\'s': [":BLines",                    "FZF text search into current buffer"],
+\'S': [":Lines",                     "FZF text search across loaded buffers"],
+\'g': [":BCommits",                  "FZF git commits of the current buffer"],
+\'G': [":Commits",                   "FZF git commits of the repository"],
+\}
 
-let g:leaderMenu = {'name':                         "Global Menu",
-             \'c': [':Commenter',                   'Comment out selection'],
-             \'v': [':vsplit',                      'Split buffer vertically'],
-             \'h': [':split',                       'Split buffer horizontally'],
-             \'n': [':NERDTreeToggle',              'ToggleNERDtree'],
-             \'p': [':Farr',                        'Search and Replace'],
-             \'r': [':retab',                       ':retab tabspaces => spaces'],
-             \'s': [':Search',                      'Search'],
-             \'d': [':bd',                          'Close buffer'],
-             \'l': [':ls',                          'List opened buffers'],
-             \'q': [':q',                           'Quit Nvim (:q)'],
-             \'<': [':foldclose',                   'Close fold (<)'],
-             \'>': [':foldopen',                    'Open fold (>)'],
-             \'w': [':w',                           'Save file (:w)'],
-             \'t': [':split term://fish',           'Open Term in vsplit'],
-             \'z': [':set foldlevel=1000',          'Open all folds'],
-             \'x': [':set foldlevel=0',             'Close all folds'],
-             \}
+let helpMenu = {'name': "Help menu",
+\'1': ['1', "Keybindings"],
+\'2': ['2', "C-n nerdtree toggle"],
+\}
 
+        " Define the menu content including the above menu
 
+let g:leaderMenu = {'name':            "Global Menu",
+\'f': [fzfMenu,                        "FZF menu"],
+\'H': [helpMenu,                       "Help menu"],
+\'c': [':Commenter',                   'Comment out selection'],
+\'v': [':vsplit',                      'Split buffer vertically'],
+\'h': [':split',                       'Split buffer horizontally'],
+\'n': [':NERDTreeToggle',              'ToggleNERDtree'],
+\'p': [':Farr',                        'Search and Replace'],
+\'r': [':retab',                       ':retab tabspaces => spaces'],
+\'s': [':Search',                      'Search'],
+\'d': [':bd',                          'Close buffer'],
+\'l': [':ls',                          'List opened buffers'],
+\'q': [':q',                           'Quit Nvim (:q)'],
+\'<': [':foldclose',                   'Close fold (<)'],
+\'>': [':foldopen',                    'Open fold (>)'],
+\'w': [':w',                           'Save file (:w)'],
+\'t': [':split term://fish',           'Open Term in vsplit'],
+\'z': [':set foldlevel=1000',          'Open all folds'],
+\'G': [':GitGutterFold',               'Fold Git Changes'],
+\}
 
-
-"" Add to leaderMenu to enable fzf menu (needs config). What plugin has :Files etc...
-"\'f': [fzfMenu,                "FZF menu (needs config)"],
 " Reloading source and opening menu again kills nvim!
 " \'r': [':so ~/.config/nvim/init.vim',  'Reload init.vim (might kill nvim)'],
