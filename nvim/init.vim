@@ -1,4 +1,4 @@
-"" _____               _
+""  _____              _
 "" |  ___|   _ _______| |__   _____  __
 "" | |_ | | | |_  / _ \ '_ \ / _ \ \/ /     NeoVIM config file.
 "" |  _|| |_| |/ /  __/ |_) | (_) >  <      ~/.config/nvim/init.vim
@@ -7,6 +7,8 @@
 """ This config requires vim-plug. Install it first with the following command:
 "" curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 ""    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+""""""""""""""" VimPlug START """""""""""""""
 
 "" Plug calls has to be first.
 call plug#begin('~/.local/share/nvim/plugged')
@@ -21,25 +23,23 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Plug 'davidhalter/jedi-vim'
 " Coc intellisense completion like VScode https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'pangloss/vim-javascript', {'branch': 'master'}
-Plug 'yuezk/vim-js'
-Plug 'maxmellon/vim-jsx-pretty'
-Plug 'psf/black', { 'branch': 'stable' } " :Black autoformater https://github.com/psf/black
+"Plug 'pangloss/vim-javascript', {'branch': 'master'}
+"Plug 'yuezk/vim-js'
+"Plug 'maxmellon/vim-jsx-pretty'
 "" color previews from coc-highlight. Good alt: https://github.com/ap/vim-css-color
-"" Themes {
+"Plug 'dense-analysis/ale' " Multilanguage Linting (remember to disable cocs linting)
+"Plug 'icymind/NeoSolarized'
+"Plug 'franbach/miramare'
+"Plug 'dylanaraps/wal.vim'
 Plug 'morhetz/gruvbox'
-Plug 'icymind/NeoSolarized'
-Plug 'franbach/miramare'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-"" }
-Plug 'Yggdroot/indentLine'
-"Plug 'dense-analysis/ale' " Multilanguage Linting (remember to disable cocs linting)
 Plug 'ryanoasis/vim-devicons' "https://github.com/ryanoasis/vim-devicons
+Plug 'Yggdroot/indentLine'
+Plug 'psf/black', { 'branch': 'stable' } " :Black autoformater https://github.com/psf/black
 Plug 'brooth/far.vim'
 Plug 'vim-scripts/MultipleSearch'
 Plug 'tpope/vim-fugitive' " :Git
-
 Plug 'jiangmiao/auto-pairs' " Pairs () [] {} '' etc https://github.com/jiangmiao/auto-pairs
 Plug 'vimwiki/vimwiki' " https://github.com/vimwiki/vimwiki
 Plug 'scrooloose/nerdtree'
@@ -54,21 +54,21 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'gcavallanti/vim-noscrollbar'
+"Plug 'tpope/vim-surround'
+Plug 'mhinz/vim-startify'
+Plug 'voldikss/vim-floaterm'
 
-let g:comfortable_motion_scroll_down_key = "j"
-let g:comfortable_motion_scroll_up_key = "k"
 "let g:comfortable_motion_no_default_key_mappings = 1
 
 let mapleader = "\<Space>"
 "" Pop up leader-bindings-window at top, bottom or center
-let g:leaderMapperPos = "bottom"
-let g:leaderMapperWidth = 50
+let g:leaderMapperPos = "middle"
+let g:leaderMapperWidth = 60
 let g:vimwiki_list = [{'path': '~/.vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
-"let g:indentLine_setColors = 0
+let g:indentLine_setColors = 1
 "let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_char = '┊' " 
 let g:miramare_transparent_background = 1
@@ -105,17 +105,60 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 nmap <leader>- <Plug>AirlineSelectPrevTab
 nmap <leader>+ <Plug>AirlineSelectNextTab
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-let g:airline#extensions#default#section_truncate_width = { 'y': 9, }
+"let g:airline#extensions#default#section_truncate_width = { 'y': 9, }
+let g:airline_right_sep = "\uE0B2"
+let g:airline_left_sep = "\uE0c6"
+let g:webdevicons_enable = 1
+
+""""""""""""""" Floaterm START """""""""""""""
+
+let g:floaterm_shell = "/usr/bin/fish"
+let g:floaterm_winblend = 15
+let g:floaterm_keymap_kill   = '<F6>'
+let g:floaterm_keymap_new    = '<F7>'
+let g:floaterm_keymap_prev   = '<F8>'
+let g:floaterm_keymap_next   = '<F9>'
+let g:floaterm_keymap_toggle = '<F12>'
+let g:floaterm_width = 0.8
+let g:floaterm_height = 0.4
+let g:floaterm_position = "center"
+let g:floaterm_wintype = "floating"
+
+
+""""""""""""""" Floaterm END """""""""""""""
+
+""""""""""""""" VimPlug END """""""""""""""
 call plug#end()
 
-function! Noscrollbar(...)
-"        let g:airline_section_y = '%{noscrollbar#statusline(9,''▰'',''▰'',[''▱''],[''▱''])}'
-        let g:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▐''],[''▌''])}'
-endfunction
-call airline#add_statusline_func('Noscrollbar')
+""""""""""""" Startup Commands """""""""""""
+autocmd VimEnter *
+                \   if !argc()
+                \ |   Startify
+                " \ |   NERDTree
+                \ |   wincmd w
+                \ | endif
 
+""""""""""""""" Airline START """""""""""""""
+
+"function! Noscrollbar(...)
+"let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''┃'',[''''],[''''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''┊'',[''''],[''''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▌''],[''▐''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,''■'',''◫'',[''◧''],[''◨''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''│'',[''▕''],[''▏''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▐''],[''▌''])}'
+"endfunction
+"call airline#add_statusline_func('Noscrollbar')
+
+let g:webdevicons_enable_airline_tabline = 1
+let g:webdevicons_enable_airline_statusline = 1
+
+
+" CoC status line (section C (Middle) of airline) file location/name, language etc.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-" fix for OperatorMono font
+
+""""""""""""""" Airline END """""""""""""""
+
 hi Comment gui=italic cterm=italic
 hi htmlArg gui=italic cterm=italic
 syntax enable
@@ -163,7 +206,7 @@ nnoremap <silent> <PageUp> :call comfortable_motion#flick(-100)<CR>
 
 "" Sets delay between pressing leader and window popping.
 "" So you can use a leader command before menu pops.
-set timeoutlen=200
+set timeoutlen=100
 "set fillchars+=vert:\ " Set split separator char. default |
 "colorscheme miramare
 colorscheme gruvbox
@@ -198,6 +241,7 @@ set autoread
 "" noremap means non recursive. recursive is standard.
 "" ie. :map j gg, :map Q j means Q is gg. With :noremap W j, W is j.
 
+
 " Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -211,15 +255,15 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-noremap <C-n> :NERDTreeToggle<CR>
+"noremap <silent> <C-n> :NERDTreeToggle<CR>
 "" Navigating splits, saving a keypress: Ctrl-hjkl
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 "" Resize splits with ctrl arrowkeys
-noremap <silent> <C-Left> :vertical resize +3<CR>
-noremap <silent> <C-Right> :vertical resize -3<CR>
+noremap <silent> <C-Left> :vertical resize -3<CR>
+noremap <silent> <C-Right> :vertical resize +3<CR>
 noremap <silent> <C-Up> :resize +3<CR>
 noremap <silent> <C-Down> :resize -3<CR>
 "" Remap leader from \ to space.
@@ -227,13 +271,7 @@ nnoremap <Space> <Nop>
 "" Define leader key to space and call vim-leader-mapper
 nnoremap <silent> <Leader> :LeaderMapper "<Space>"<CR>
 vnoremap <silent> <Leader> :LeaderMapper "<Space>"<CR>
-"" \tt opens terminal in new vertical split
-noremap <Leader>tt :split term://fish<CR>
 
-" start terminal in insert mode
-au BufEnter * if &buftype == 'terminal' | :startinsert | endif
-" turn terminal to normal mode with escape
-tnoremap <Esc> <C-\><C-n>
 
 
 "" Additional stuff
@@ -242,45 +280,44 @@ cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 " Run xrdb whenever Xdefaults or Xresources are updated
 autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
-"" NERDTree Options
+"""""""""""""" NERDTree START """"""""""""""
 
 "augroup nerdtree_open_always
 "        autocmd!
 "        autocmd VimEnter * NERDTree | wincmd p
 "augroup END
-
-augroup nerdtree_open_if_no_file
-        autocmd StdinReadPre * let s:std_in=1
-        autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-augroup END
+"
+" augroup nerdtree_open_if_no_file
+        " autocmd StdinReadPre * let s:std_in=1
+        " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" augroup END
 
 augroup nerdtree_open_if_dir
         autocmd StdinReadPre * let s:std_in=1
         autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 augroup END
-"" Broken when opening some .c and .py files from empty vim? lint plugin problem?
-"augroup nerdtree_close_nerdtree_on_opening_file
-"        autocmd BufEnter NERD_tree_* nmap  d<CR> <CR> :NERDTreeToggle <CR>
-"        autocmd BufLeave NERD_tree_* unmap d<CR>
-"augroup END
 
-augroup nerdtree_autoclose_if_alone
-        autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-augroup END
-
+" augroup nerdtree_autoclose_if_alone
+        " autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" augroup END
+" 
 augroup nerdtree_dont_open_stuff_inside_nerdtree
         autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | endif
 augroup END
+ 
 
-"" Other Nerdtree options
 let NERDTreeAutoDeleteBuffer = 1
-"let NERDTreeMinimalUI = 1
+" let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let NERDTreeQuitOnOpen = 1
 let g:NERDTreeWinSize = 20
 let g:Tlist_WinWidth = 20
+let g:NERDTreeShowHidden=1
+let g:webdevicons_enable_nerdtree = 1
 
-"" vim-leader-mapper options
+""""""""""""""" NERDTree END """""""""""""""
+
+""""""""""""""" vim-leader-mapper START """""""""""""""
 
 "" Create a window of bindings. First a submenu for fuzzysearch.:
 let fzfMenu = {'name':               "FZF Menu",
@@ -292,19 +329,25 @@ let fzfMenu = {'name':               "FZF Menu",
 \'G': [":Commits",                   "FZF git commits of the repository"],
 \}
 
-let helpMenu = {'name': "Help menu",
-\'1': ['1', "Keybindings"],
-\'2': ['2', "C-n nerdtree toggle"],
+let keyMenu = {'name': "   Keybindings",
+\'F12': [':FloatermToggle',          "F12 Floating Terminal"],
+\'F9': [':FloatermNext',             "F9 Floaterm Next"],
+\'F8': [':FloatermPrev',             "F8 Floaterm Previous"],
+\'F7': [':FloatermNew',              "F7 Floaterm New"],
+\'F6': [':FloatermKill',             "F6 Floaterm Kill"],
+\'p': [':FloatermNew bpython',       "bPython"],
+\'l': [':FloatermNew lazygit',       "LazyGit"],
+\'r': [':FloatermNew ranger',        "Ranger"],
 \}
 
-        " Define the menu content including the above menu
+""" Main menu content including the above menus
 
-let g:leaderMenu = {'name':            "Global Menu",
+let g:leaderMenu = {'name':            "   Main Menu",
 \'f': [fzfMenu,                        "FZF menu"],
-\'H': [helpMenu,                       "Help menu"],
+\'k': [keyMenu,                        "Keybindings"],
 \'c': [':Commenter',                   'Comment out selection'],
-\'v': [':vsplit',                      'Split buffer vertically'],
-\'h': [':split',                       'Split buffer horizontally'],
+\'V': [':vsplit',                      'Split buffer vertically'],
+\'H': [':split',                       'Split buffer horizontally'],
 \'n': [':NERDTreeToggle',              'ToggleNERDtree'],
 \'p': [':Farr',                        'Search and Replace'],
 \'r': [':retab',                       ':retab tabspaces => spaces'],
@@ -315,10 +358,9 @@ let g:leaderMenu = {'name':            "Global Menu",
 \'<': [':foldclose',                   'Close fold (<)'],
 \'>': [':foldopen',                    'Open fold (>)'],
 \'w': [':w',                           'Save file (:w)'],
-\'t': [':split term://fish',           'Open Term in vsplit'],
-\'z': [':set foldlevel=1000',          'Open all folds'],
+\'z': [':set foldlevel=1000',          'Open 1000 folds'],
+\'R': [':so ~/.config/nvim/init.vim',  'Reload init.vim'],
 \'G': [':GitGutterFold',               'Fold Git Changes'],
 \}
 
-" Reloading source and opening menu again kills nvim!
-" \'r': [':so ~/.config/nvim/init.vim',  'Reload init.vim (might kill nvim)'],
+""""""""""""""" vim-leader-mapper END """""""""""""""
