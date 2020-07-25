@@ -2,97 +2,71 @@
 "" |  ___|   _ _______| |__   _____  __
 "" | |_ | | | |_  / _ \ '_ \ / _ \ \/ /     NeoVIM config file.
 "" |  _|| |_| |/ /  __/ |_) | (_) >  <      ~/.config/nvim/init.vim
-"" |_|   \__,_/___\___|_.__/ \___/_/\_\     (This file may not be read by nvim config on Arch by default. RTFM.)
-"""
-""" This config requires vim-plug. Install it first with the following command:
+"" |_|   \__,_/___\___|_.__/ \___/_/\_\     
+""
+"" This config requires vim-plug. Install it first with the following command:
 "" curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 ""    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"" 
+""""""""""""" VimPlug START """""""""""""""
+"" Plug calls have to come first.
+call plug#begin('~/.local/share/nvim/plugged') 
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " M$ VScode AI completion engine for Vim.
+"Plug 'dense-analysis/ale'                   " Multilanguage Linting (disable Coc linting)
+"Plug 'icymind/NeoSolarized'                 " --- Themes     ---
+"Plug 'franbach/miramare'                    " Gruvbox clone sort of
+"Plug 'dylanaraps/wal.vim'                   " Change colors with wallpaper.
+Plug 'morhetz/gruvbox'                       " Optricians favourite.
+Plug 'vim-airline/vim-airline-themes'        " --- End Themes ---
+Plug 'vim-airline/vim-airline'               " Info and buffer bars.
+Plug 'ap/vim-css-color'                      " Color and color code higlighter
+Plug 'ryanoasis/vim-devicons'                " https://github.com/ryanoasis/vim-devicons
+Plug 'Yggdroot/indentLine'                   " Code intentation lines
+Plug 'psf/black', { 'branch': 'stable' }     " :Black autoformatter for Python.
+Plug 'brooth/far.vim'                        " Find and replace. :help Far
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Need both these.
+Plug 'junegunn/fzf.vim'                      " Fuzzyfinder :help FZF
+Plug 'vim-scripts/MultipleSearch'            " :help Search, :SearchReset
+Plug 'tpope/vim-fugitive'                    " :help Git 
+Plug 'jiangmiao/auto-pairs'                  " Auto pairs {([''])} Looking for better alternative.
+Plug 'scrooloose/nerdtree'                   " I dont really use this anymore. See floaterm+ranger.
+Plug 'Xuyuanp/nerdtree-git-plugin'           " Maybe only reason to use nerdtree.
+Plug 'airblade/vim-gitgutter'                " Shows changes from git branch line for line.
+Plug 'machakann/vim-highlightedyank'         " Highlights yank region. Its the little things...
+Plug 'tmhedberg/SimpylFold'                  " Code Folder. <>
+Plug 'damofthemoon/vim-commenter'            " :Commenter. Multiline in V-mode, Multi-lang.
+Plug 'damofthemoon/vim-leader-mapper'        " Configurable popup menu on <leader> press.
+Plug 'terryma/vim-multiple-cursors'          " https://github.com/terryma/vim-multiple-cursors 
+Plug 'yuttie/comfortable-motion.vim'         " Soft scrolling (set keybinds)
+Plug 'gcavallanti/vim-noscrollbar'           " Uselessly cool scrollbar inside airline.
+Plug 'mhinz/vim-startify'                    " StartPage for Vim. Not really useless.
+Plug 'voldikss/vim-floaterm'                 " Floating terminal and term programs in Vim! Awesome!
 
-""""""""""""""" VimPlug START """""""""""""""
+""""""""""""""" Plugin options """""""""""""""
 
-"" Plug calls has to be first.
-call plug#begin('~/.local/share/nvim/plugged')
-" Using CoC. Its better i think. Intellisense from VScode.
-"" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"" Deoplete-jedi for polyglot completion
-"" https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources for more.
-" Plug 'zchee/deoplete-jedi'
-"" polyglot is collection of language packs
-" Plug 'sheerun/vim-polyglot'
-" jedi-vim autocomplete for python
-" Plug 'davidhalter/jedi-vim'
-" Coc intellisense completion like VScode https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'pangloss/vim-javascript', {'branch': 'master'}
-"Plug 'yuezk/vim-js'
-"Plug 'maxmellon/vim-jsx-pretty'
-"" color previews from coc-highlight. Good alt: https://github.com/ap/vim-css-color
-"Plug 'dense-analysis/ale' " Multilanguage Linting (remember to disable cocs linting)
-"Plug 'icymind/NeoSolarized'
-"Plug 'franbach/miramare'
-"Plug 'dylanaraps/wal.vim'
-Plug 'morhetz/gruvbox'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'ryanoasis/vim-devicons' "https://github.com/ryanoasis/vim-devicons
-Plug 'Yggdroot/indentLine'
-Plug 'psf/black', { 'branch': 'stable' } " :Black autoformater https://github.com/psf/black
-Plug 'brooth/far.vim'
-Plug 'vim-scripts/MultipleSearch'
-Plug 'tpope/vim-fugitive' " :Git
-Plug 'jiangmiao/auto-pairs' " Pairs () [] {} '' etc https://github.com/jiangmiao/auto-pairs
-Plug 'vimwiki/vimwiki' " https://github.com/vimwiki/vimwiki
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'machakann/vim-highlightedyank' " https://github.com/machakann/vim-highlightedyank
-" Folds code
-Plug 'tmhedberg/SimpylFold' "https://github.com/tmhedberg/SimpylFold
-" Allows easy commenting even mulstiline with visual mode. :Commenter
-Plug 'damofthemoon/vim-commenter' " https://github.com/damofthemoon/vim-commenter
-Plug 'damofthemoon/vim-leader-mapper' " Nice configurable menu on <leader> press. https://github.com/damofthemoon/vim-leader-mapper
-Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'yuttie/comfortable-motion.vim'
-Plug 'gcavallanti/vim-noscrollbar'
-"Plug 'tpope/vim-surround'
-Plug 'mhinz/vim-startify'
-Plug 'voldikss/vim-floaterm'
-
-"let g:comfortable_motion_no_default_key_mappings = 1
-
-let mapleader = "\<Space>"
-"" Pop up leader-bindings-window at top, bottom or center
+let mapleader = "\<Space>" " Set leader to space.
+" In general settings set timeoutlen=millisec so you can use other leader
+" commands before menu pops up.
 let g:leaderMapperPos = "middle"
 let g:leaderMapperWidth = 60
-let g:vimwiki_list = [{'path': '~/.vimwiki/',
-                      \ 'syntax': 'markdown', 'ext': '.md'}]
+
 let g:indentLine_setColors = 1
-"let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-let g:indentLine_char = '┊' " 
-let g:miramare_transparent_background = 1
-let g:airline_theme = 'gruvbox'
-let g:miramare_disable_italic_comment = 0
-let g:miramare_enable_italic = 1
-let g:airline#extensions#coc#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
+let g:indentLine_char = '┊'
+
 hi HighlightedyankRegion cterm=reverse gui=reverse
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-"let g:deoplete#enable_at_startup = 1
-let g:neomake_python_enabled_makers = ['pylint']
-"let g:neoformat_basic_format_align = 1
-"let g:neoformat_basic_format_retab = 1
-"let g:neoformat_basic_format_trim = 1
 let g:highlightedyank_highlight_duration = 1000
-"let g:airline#extensions#ale#enabled = 1
+
 "let g:ale_sign_error = '🛑'
 "let g:ale_sign_warning = '⚠'
-let g:comfortable_motion_no_default_key_mappings = 1
-let g:airline#extensions#capslock#enabled = 1
-let g:airline#extensions#tabline#buffer_idx_mode = 1
+
+let g:comfortable_motion_no_default_key_mappings = 1 " Set own further down.
+
+let g:webdevicons_enable = 1
+
+""""""""""""""" Airline START """""""""""""""
+
+" Select buffer tabs with leader+num.
 nmap <leader>1 <Plug>AirlineSelectTab1
 nmap <leader>2 <Plug>AirlineSelectTab2
 nmap <leader>3 <Plug>AirlineSelectTab3
@@ -104,11 +78,20 @@ nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 nmap <leader>- <Plug>AirlineSelectPrevTab
 nmap <leader>+ <Plug>AirlineSelectNextTab
-let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-"let g:airline#extensions#default#section_truncate_width = { 'y': 9, }
+let g:airline_theme = 'gruvbox'
+let g:airline#extensions#coc#enabled = 1
+"let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#capslock#enabled = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]' " Noscrollbar takes this space.
+let g:airline#extensions#default#section_truncate_width = { 'y': 9, } " Lenght of noscrollbar.
 let g:airline_right_sep = "\uE0B2"
-let g:airline_left_sep = "\uE0c6"
-let g:webdevicons_enable = 1
+let g:airline_left_sep = "\uE0c6" " Powerline-extras character.
+
+""""""""""""""" Airline END """""""""""""""
 
 """"""""""""""" Floaterm START """""""""""""""
 
@@ -131,36 +114,27 @@ let g:floaterm_wintype = "floating"
 call plug#end()
 
 """"""""""""" Startup Commands """""""""""""
-autocmd VimEnter *
-                \   if !argc()
-                \ |   Startify
-                " \ |   NERDTree
-                \ |   wincmd w
-                \ | endif
+autocmd VimEnter * if !argc() | Startify | wincmd w | endif
+" Add | NERDtree if you want Startify and NERDtree on start
+"
+""""""""""""""" Airline EXTRAS START """""""""""""""
 
-""""""""""""""" Airline START """""""""""""""
-
-"function! Noscrollbar(...)
+function! Noscrollbar(...)
 "let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''┃'',[''''],[''''])}'
 "let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''┊'',[''''],[''''])}'
 "let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▌''],[''▐''])}'
 "let w:airline_section_y = '%{noscrollbar#statusline(9,''■'',''◫'',[''◧''],[''◨''])}'
 "let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''│'',[''▕''],[''▏''])}'
-"let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▐''],[''▌''])}'
-"endfunction
-"call airline#add_statusline_func('Noscrollbar')
-
-let g:webdevicons_enable_airline_tabline = 1
-let g:webdevicons_enable_airline_statusline = 1
-
+let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▐''],[''▌''])}'
+endfunction
+call airline#add_statusline_func('Noscrollbar')
 
 " CoC status line (section C (Middle) of airline) file location/name, language etc.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-""""""""""""""" Airline END """""""""""""""
+""""""""""""""" Airline EXTRAS END """""""""""""""
 
-hi Comment gui=italic cterm=italic
-hi htmlArg gui=italic cterm=italic
+colorscheme gruvbox
 syntax enable
 filetype indent on
 set clipboard=unnamedplus
@@ -190,7 +164,10 @@ set background=dark
 set mouse=a     "" fully gui functional mouse
 set shell=sh    "" required for some plugins to execute system functions.
 set splitbelow splitright
-" Set backups
+" Set Comments and htmlargs to italic. Needs supported font
+hi Comment gui=italic cterm=italic
+hi htmlArg gui=italic cterm=italic
+
 if has('persistent_undo')
   set undofile
   set undolevels=3000
@@ -198,9 +175,10 @@ if has('persistent_undo')
 endif
 set backupdir=~/.local/share/nvim/backup " Don't put backups in current dir
 set backup
-set noswapfile
+set noswapfile " Dont fill system up with annoying swap files.
+set autoread " Automatically re-read file if a change was detected outside of vim
 
-"" Soft scrolling comfortable_motion.vim
+"" Soft scrolling comfortable_motion.vim bindings.
 nnoremap <silent> <PageDown> :call comfortable_motion#flick(100)<CR>
 nnoremap <silent> <PageUp> :call comfortable_motion#flick(-100)<CR>
 
@@ -208,39 +186,32 @@ nnoremap <silent> <PageUp> :call comfortable_motion#flick(-100)<CR>
 "" So you can use a leader command before menu pops.
 set timeoutlen=100
 "set fillchars+=vert:\ " Set split separator char. default |
-"colorscheme miramare
-colorscheme gruvbox
-"" Background colors for active vs inactive windows
+
+""""" Buffers BG Colors START """""
+"" gruvbox colors: bg #282828, bg1 #3c3836
 hi ActiveWindow guibg=#282828
-hi InactiveWindow guibg=#1D2021
-
-"" miramare colors #2A2426 #242021
-"" gruvbox colors #1D2021 #32302F probably
-
+hi InactiveWindow guibg=#3c3836
 " Call method on window enter
 augroup WindowManagement
   autocmd!
   autocmd WinEnter * call Handle_Win_Enter()
 augroup END
-
 " Change highlight group of active/inactive windows
 function! Handle_Win_Enter()
   setlocal winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
 endfunction
 
+""""" Buffers BG Colors END """""
+
 " Enable spellcheck for markdown files
 autocmd BufRead,BufNewFile *.md setlocal spell
 
-" Automatically re-read file if a change was detected outside of vim
-set autoread
-
-" Keybindings
+""""" Keybindings """"""
 "" :map, :noremap works in all modes
 "" :nmap, :nnoremap works in normal mode
 "" :vmap, :vnoremap works in visual mode
 "" noremap means non recursive. recursive is standard.
 "" ie. :map j gg, :map Q j means Q is gg. With :noremap W j, W is j.
-
 
 " Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
@@ -249,14 +220,14 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 "noremap <silent> <C-n> :NERDTreeToggle<CR>
-"" Navigating splits, saving a keypress: Ctrl-hjkl
+
+"" Navigating splits, saving a keypress: Ctrl-hjkl. Default C-w+left,right
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
@@ -271,8 +242,6 @@ nnoremap <Space> <Nop>
 "" Define leader key to space and call vim-leader-mapper
 nnoremap <silent> <Leader> :LeaderMapper "<Space>"<CR>
 vnoremap <silent> <Leader> :LeaderMapper "<Space>"<CR>
-
-
 
 "" Additional stuff
 "" w!! to save as sudo if file is not owned by user
@@ -305,7 +274,6 @@ augroup nerdtree_dont_open_stuff_inside_nerdtree
         autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | endif
 augroup END
  
-
 let NERDTreeAutoDeleteBuffer = 1
 " let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
