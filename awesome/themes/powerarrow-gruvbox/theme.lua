@@ -145,10 +145,17 @@ clock:connect_signal("button::press",
         if button == 1 then cw.toggle() end
     end)
 
+local github_activity_widget = require("awesome-wm-widgets.github-activity-widget.github-activity-widget")
+
+
+local net_speed_widget = require("awesome-wm-widgets.net-speed-widget.net-speed")
+
 -- Separators
 local spr     = wibox.widget.textbox(' ')
 local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
 local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
+local arrr_dl = separators.arrow_right(theme.bg_focus, "alpha")
+local arrr_ld = separators.arrow_right("alpha", theme.bg_focus)
 
 function theme.at_screen_connect(s)
 
@@ -187,8 +194,12 @@ function theme.at_screen_connect(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            s.mytaglist,
+            wibox.container.background(s.mytaglist, theme.bg_focus),
             s.mypromptbox,
+            --spr,
+            --arrr_ld,
+            arrr_dl,
+            spr,
             spr,
         },
         s.mytasklist, -- Middle widget
@@ -216,16 +227,16 @@ function theme.at_screen_connect(s)
                 }), theme.bg_focus ),
             wibox.container.background(spr, theme.bg_focus),
             wibox.container.background(spr, theme.bg_focus),
-            arrl_dl,
-            arrl_ld,
-            wibox.container.background(spr, theme.bg_focus),
-            wibox.container.background(cpuicon, theme.bg_focus),
-            wibox.container.background(cpu_widget({
-                width = 50, step_width = 4, step_spacing = 0,
-                enable_kill_button = true, process_info_max_lenght = -1, color = '#FABD2F'
-                }), theme.bg_focus ),
-            wibox.container.background(spr, theme.bg_focus),
-            wibox.container.background(spr, theme.bg_focus),
+            -- arrl_dl,
+            -- arrl_ld,
+            -- wibox.container.background(spr, theme.bg_focus),
+            -- wibox.container.background(cpuicon, theme.bg_focus),
+            -- wibox.container.background(cpu_widget({
+                -- width = 45, step_width = 4, step_spacing = 0,
+                -- enable_kill_button = true, process_info_max_lenght = -1, color = '#FABD2F'
+                -- }), theme.bg_focus ),
+           -- wibox.container.background(spr, theme.bg_focus),
+           -- wibox.container.background(spr, theme.bg_focus),
             arrl_dl,
             arrl_ld,
             wibox.container.background(memicon, theme.bg_focus),
@@ -242,8 +253,11 @@ function theme.at_screen_connect(s)
             wibox.container.background(temp, theme.bg_focus),
             arrl_dl,
             arrl_ld,
-            wibox.container.background(neticon, theme.bg_focus),
-            wibox.container.background(net.widget, theme.bg_focus),
+           -- wibox.container.background(neticon, theme.bg_focus),
+           -- wibox.container.background(net_speed_widget({ interface = 'enp3s0' }), theme.bg_focus),
+            arrl_dl,
+            arrl_ld,
+           -- wibox.container.background(github_activity_widget({ username = 'fuzebox1' }), theme.bg_focus),
             arrl_dl,
             arrl_ld,
             wibox.container.background(todo_widget, theme.bg_focus),

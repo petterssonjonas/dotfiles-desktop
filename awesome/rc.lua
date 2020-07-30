@@ -41,6 +41,22 @@ do
         in_error = false
     end)
 end
+
+-- Changing spotify notifications.
+naughty.config.presets.spotify = { 
+    -- if you want to disable Spotify notifications completely, return false
+    callback = function(args)
+        return true
+    end,
+
+    -- Adjust the size of the notification
+    height = 100,
+    width  = 400,
+    -- Guessing the value, find a way to fit it to the proper size later
+    icon_size = 90
+}
+table.insert(naughty.dbus.config.mapping, {{appname = "Spotify"}, naughty.config.presets.spotify})
+
 -- }}}
 -- {{{ Autostart windowless processes
 
@@ -61,7 +77,7 @@ run_once({ "wmname LG3D", -- Fix java problem
         "dropbox",
         "xset r rate 365 55",
 }) 
--- awful.spawn.with_shell("nitrogen --restore")
+awful.spawn.with_shell("picom")
 
 -- This function implements the XDG autostart specification
 --[[
@@ -234,6 +250,10 @@ awful.util.mymainmenu = freedesktop.menu.build({
 -- awful.util.mymainmenu.wibox:connect_signal("mouse::leave", function() awful.util.mymainmenu:hide() end)
 -- menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
 -- }}}
+
+
+
+
 -- {{{ Screen
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", function(s)

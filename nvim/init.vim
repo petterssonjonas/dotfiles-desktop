@@ -28,9 +28,10 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Need both these.
 Plug 'junegunn/fzf.vim'                      " Fuzzyfinder :help FZF
 Plug 'vim-scripts/MultipleSearch'            " :help Search, :SearchReset
 Plug 'tpope/vim-fugitive'                    " :help Git 
-Plug 'jiangmiao/auto-pairs'                  " Auto pairs {([''])} Looking for better alternative.
-Plug 'scrooloose/nerdtree'                   " I dont really use this anymore. See floaterm+ranger.
+Plug 'jiangmiao/auto-pairs'                  " Auto pairs {([''])} Looking for better alt.
+Plug 'scrooloose/nerdtree'                   " Useless, See floaterm+ranger.
 Plug 'Xuyuanp/nerdtree-git-plugin'           " Maybe only reason to use nerdtree.
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'} " Browser window .md preview
 Plug 'airblade/vim-gitgutter'                " Shows changes from git branch line for line.
 Plug 'machakann/vim-highlightedyank'         " Highlights yank region. Its the little things...
 Plug 'tmhedberg/SimpylFold'                  " Code Folder. <>
@@ -40,7 +41,9 @@ Plug 'terryma/vim-multiple-cursors'          " https://github.com/terryma/vim-mu
 Plug 'yuttie/comfortable-motion.vim'         " Soft scrolling (set keybinds)
 Plug 'gcavallanti/vim-noscrollbar'           " Uselessly cool scrollbar inside airline.
 Plug 'mhinz/vim-startify'                    " StartPage for Vim. Not really useless.
-Plug 'voldikss/vim-floaterm'                 " Floating terminal and term programs in Vim! Awesome!
+Plug 'voldikss/vim-floaterm'                 " Floating terminal in Vim! Awesome!
+Plug 'zirrostig/vim-schlepp'
+Plug 'johannesthyssen/vim-signit'
 
 """"""""""""""" Plugin options """""""""""""""
 
@@ -113,30 +116,10 @@ let g:floaterm_wintype = "floating"
 """"""""""""""" VimPlug END """""""""""""""
 call plug#end()
 
-""""""""""""" Startup Commands """""""""""""
-autocmd VimEnter * if !argc() | Startify | wincmd w | endif
-" Add | NERDtree if you want Startify and NERDtree on start
-"
-""""""""""""""" Airline EXTRAS START """""""""""""""
-
-function! Noscrollbar(...)
-"let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''┃'',[''''],[''''])}'
-"let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''┊'',[''''],[''''])}'
-"let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▌''],[''▐''])}'
-"let w:airline_section_y = '%{noscrollbar#statusline(9,''■'',''◫'',[''◧''],[''◨''])}'
-"let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''│'',[''▕''],[''▏''])}'
-let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▐''],[''▌''])}'
-endfunction
-call airline#add_statusline_func('Noscrollbar')
-
-" CoC status line (section C (Middle) of airline) file location/name, language etc.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-""""""""""""""" Airline EXTRAS END """""""""""""""
-
 colorscheme gruvbox
 syntax enable
 filetype indent on
+filetype plugin on
 set clipboard=unnamedplus
 set cursorline
 set cmdheight=1
@@ -159,9 +142,9 @@ set showtabline=2
 set incsearch
 set hlsearch
 set noshowmode
-set termguicolors "" Make function to check if has guicolors
+set termguicolors "" Make a function to check if has guicolors
 set background=dark
-set mouse=a     "" fully gui functional mouse
+set mouse=a     "" fully functional mouse
 set shell=sh    "" required for some plugins to execute system functions.
 set splitbelow splitright
 " Set Comments and htmlargs to italic. Needs supported font
@@ -173,24 +156,94 @@ if has('persistent_undo')
   set undolevels=3000
   set undoreload=10000
 endif
+
 set backupdir=~/.local/share/nvim/backup " Don't put backups in current dir
 set backup
 set noswapfile " Dont fill system up with annoying swap files.
 set autoread " Automatically re-read file if a change was detected outside of vim
-
-"" Soft scrolling comfortable_motion.vim bindings.
-nnoremap <silent> <PageDown> :call comfortable_motion#flick(100)<CR>
-nnoremap <silent> <PageUp> :call comfortable_motion#flick(-100)<CR>
-
 "" Sets delay between pressing leader and window popping.
 "" So you can use a leader command before menu pops.
 set timeoutlen=100
 "set fillchars+=vert:\ " Set split separator char. default |
 
+""""""""""""" Startify START """""""""""""
+
+autocmd User Startified setlocal cursorline
+
+" hi StartifyBracket ctermfg=240
+" hi StartifyFile    ctermfg=147
+" hi StartifyFooter  ctermfg=240
+" hi StartifyHeader  ctermfg=114
+" hi StartifyNumber  ctermfg=215
+" hi StartifyPath    ctermfg=245
+" hi StartifySlash   ctermfg=240
+" hi StartifySpecial ctermfg=240
+
+let g:startify_custom_header =
+      \ 'startify#center(startify#fortune#cowsay())'
+
+let g:startify_custom_footer =
+       \ ['', "   <F12> Terminal | <Space> Mapper menu | :Sessions :Ssave :Sload | Visual selection: Alt+arrows move block.   ", '']
+
+
+let g:startify_fortune_use_unicode = 1
+let g:startify_change_to_dir = 1
+
+let g:startify_bookmarks = [
+        \ { 'a': '~/.nvim/init.vim' },
+        \ { 'b': '~/.config/awesome/rc.lua' },
+        \ { 'c': '~/.config/awesome/themes/powerarrow-gruvbox/theme.lua' },
+        \ { 'd': '~/.config/qtile/config.py' },
+        \ { 'p': '~/code/pyfetch/pyfetch.py' },
+        \ ]
+
+let g:startify_lists = [
+      \ { 'type': 'files',     'header': ['   Recent']         },
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
+      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ ]
+
+
+""""""""""""" Startify END """""""""""""
+
+"let g:instant_markdown_browser = "brave"
+
+
+""""""""""""" Startup Commands """""""""""""
+
+autocmd VimEnter * if !argc() | Startify | wincmd w | endif
+" Add | NERDtree if you want Startify and NERDtree on start
+
+"""""""""""" Startup END """"""""""""
+
+""""""""""""""" Airline EXTRAS START """""""""""""""
+
+function! Noscrollbar(...)
+"let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''┃'',[''''],[''''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''┊'',[''''],[''''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▌''],[''▐''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,''■'',''◫'',[''◧''],[''◨''])}'
+"let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''│'',[''▕''],[''▏''])}'
+let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▐''],[''▌''])}'
+endfunction
+call airline#add_statusline_func('Noscrollbar')
+
+" CoC status line (section C (Middle) of airline) file location/name, language etc.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+""""""""""""""" Airline EXTRAS END """""""""""""""
+
+
+"" Soft scrolling comfortable_motion.vim bindings.
+nnoremap <silent> <PageDown> :call comfortable_motion#flick(100)<CR>
+nnoremap <silent> <PageUp> :call comfortable_motion#flick(-100)<CR>
+
+
 """"" Buffers BG Colors START """""
-"" gruvbox colors: bg #282828, bg1 #3c3836
+"" gruvbox colors: bg #282828, bg0_s #3c3836
 hi ActiveWindow guibg=#282828
-hi InactiveWindow guibg=#3c3836
+hi InactiveWindow guibg=#32302f
 " Call method on window enter
 augroup WindowManagement
   autocmd!
@@ -242,6 +295,11 @@ nnoremap <Space> <Nop>
 "" Define leader key to space and call vim-leader-mapper
 nnoremap <silent> <Leader> :LeaderMapper "<Space>"<CR>
 vnoremap <silent> <Leader> :LeaderMapper "<Space>"<CR>
+
+vmap <unique> <A-up>    <Plug>SchleppUp
+vmap <unique> <A-down>  <Plug>SchleppDown
+vmap <unique> <A-left>  <Plug>SchleppLeft
+vmap <unique> <A-right> <Plug>SchleppRight
 
 "" Additional stuff
 "" w!! to save as sudo if file is not owned by user
