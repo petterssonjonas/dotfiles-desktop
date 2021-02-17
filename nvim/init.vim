@@ -14,7 +14,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " M$ VScode AI completion engine for Vim.
 "Plug 'dense-analysis/ale'                   " Multilanguage Linting (disable Coc linting)
 "Plug 'icymind/NeoSolarized'                 " --- Themes     ---
-"Plug 'franbach/miramare'                    " Gruvbox clone sort of
+Plug 'franbach/miramare'                     " Gruvbox clone sort of
 "Plug 'dylanaraps/wal.vim'                   " Change colors with wallpaper.
 Plug 'morhetz/gruvbox'                       " Optricians favourite.
 Plug 'vim-airline/vim-airline-themes'        " --- End Themes ---
@@ -38,23 +38,42 @@ Plug 'tmhedberg/SimpylFold'                  " Code Folder. <>
 Plug 'damofthemoon/vim-commenter'            " :Commenter. Multiline in V-mode, Multi-lang.
 Plug 'damofthemoon/vim-leader-mapper'        " Configurable popup menu on <leader> press.
 Plug 'terryma/vim-multiple-cursors'          " https://github.com/terryma/vim-multiple-cursors 
-Plug 'yuttie/comfortable-motion.vim'         " Soft scrolling (set keybinds)
+Plug 'yuttie/comfortable-motion.vim'         " Soft scrolling (set keybinds)  
 Plug 'gcavallanti/vim-noscrollbar'           " Uselessly cool scrollbar inside airline.
 Plug 'mhinz/vim-startify'                    " StartPage for Vim. Not really useless.
 Plug 'voldikss/vim-floaterm'                 " Floating terminal in Vim! Awesome!
-Plug 'zirrostig/vim-schlepp'
-Plug 'johannesthyssen/vim-signit'
+Plug 'zirrostig/vim-schlepp'                 " Move blocks of visual mode selected text
+Plug 'johannesthyssen/vim-signit'            " Sign your documents/code with ASCII and info
+Plug 'voldikss/vim-translator'               " Translator
+Plug 'fadein/vim-FIGlet'                     " :FIGlet
+Plug 'lpinilla/vim-codepainter'              " Paint code or text, like a markerpen.
+Plug 'jupyter-vim/jupyter-vim'
+Plug 'ahonn/vim-fileheader'
+Plug 'SirVer/ultisnips'
+Plug 'Yggdroot/LeaderF'
+Plug 'skywind3000/Leaderf-snippet'
+"Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } } " https://github.com/glacambre/firenvim
 
-""""""""""""""" Plugin options """""""""""""""
+
+""""""""""" Plugin options """""""""""""""
+
+if has('nvim')
+    let g:python3_host_prog = "/usr/bin/python3"
+    let g:python_host_prog="/usr/bin/python3"
+else
+    set pyxversion=3
+endif
+
 
 let mapleader = "\<Space>" " Set leader to space.
 " In general settings set timeoutlen=millisec so you can use other leader
 " commands before menu pops up.
-let g:leaderMapperPos = "middle"
-let g:leaderMapperWidth = 60
+let g:leaderMapperPos = "bottom"
+let g:leaderMapperWidth = 90
 
 let g:indentLine_setColors = 1
 let g:indentLine_char = '┊'
+
 
 hi HighlightedyankRegion cterm=reverse gui=reverse
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
@@ -92,7 +111,7 @@ let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]' " Noscrollbar takes this space.
 let g:airline#extensions#default#section_truncate_width = { 'y': 9, } " Lenght of noscrollbar.
 let g:airline_right_sep = "\uE0B2"
-let g:airline_left_sep = "\uE0c6" " Powerline-extras character.
+let g:airline_left_sep = "\uE0b0" " Powerline-extras character.
 
 """"""""""""""" Airline END """""""""""""""
 
@@ -105,16 +124,34 @@ let g:floaterm_keymap_new    = '<F7>'
 let g:floaterm_keymap_prev   = '<F8>'
 let g:floaterm_keymap_next   = '<F9>'
 let g:floaterm_keymap_toggle = '<F12>'
-let g:floaterm_width = 0.8
-let g:floaterm_height = 0.4
+let g:floaterm_width = 100
+let g:floaterm_height = 0.6
 let g:floaterm_position = "center"
-let g:floaterm_wintype = "floating"
-
+"""let g:floaterm_wintype = "floating"
 
 """"""""""""""" Floaterm END """""""""""""""
 
+
+
 """"""""""""""" VimPlug END """""""""""""""
 call plug#end()
+
+inoremap <c-x><c-j> <c-\><c-o>:Leaderf snippet<cr>
+" optional: preview
+let g:Lf_PreviewResult = get(g:, 'Lf_PreviewResult', {})
+let g:Lf_PreviewResult.snippet = 1
+
+"" File header
+let g:fileheader_auto_add = 1
+let g:fileheader_new_line_at_end = 1
+let g:fileheader_default_email = "fuzebox@bahnhof.se"
+let g:fileheader_author = "Jonas 'Fuzebox' Pettersson"
+
+
+
+hi Floaterm guibg=#282828
+hi FloatermBorder guibg=#282828 guifg=#282828
+hi FloatermNC guibg=gray
 
 colorscheme gruvbox
 syntax enable
@@ -151,6 +188,7 @@ set splitbelow splitright
 hi Comment gui=italic cterm=italic
 hi htmlArg gui=italic cterm=italic
 
+
 if has('persistent_undo')
   set undofile
   set undolevels=3000
@@ -183,14 +221,14 @@ let g:startify_custom_header =
       \ 'startify#center(startify#fortune#cowsay())'
 
 let g:startify_custom_footer =
-       \ ['', "   <F12> Terminal | <Space> Mapper menu | :Sessions :Ssave :Sload | Visual selection: Alt+arrows move block.   ", '']
+       \ ['', "   <F12> Terminal | <Space> Mapper menu | Paint text F2 | :Sessions :Ssave :Sload | Visual selection: Alt+arrows move block.   ", '']
 
 
 let g:startify_fortune_use_unicode = 1
 let g:startify_change_to_dir = 1
 
 let g:startify_bookmarks = [
-        \ { 'a': '~/.nvim/init.vim' },
+        \ { 'a': '~/.config/nvim/init.vim' },
         \ { 'b': '~/.config/awesome/rc.lua' },
         \ { 'c': '~/.config/awesome/themes/powerarrow-gruvbox/theme.lua' },
         \ { 'd': '~/.config/qtile/config.py' },
@@ -207,7 +245,7 @@ let g:startify_lists = [
 
 """"""""""""" Startify END """""""""""""
 
-"let g:instant_markdown_browser = "brave"
+"let g:instant_markdown_browser = "surf"
 
 
 """"""""""""" Startup Commands """""""""""""
@@ -225,7 +263,7 @@ function! Noscrollbar(...)
 "let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▌''],[''▐''])}'
 "let w:airline_section_y = '%{noscrollbar#statusline(9,''■'',''◫'',[''◧''],[''◨''])}'
 "let w:airline_section_y = '%{noscrollbar#statusline(9,''┈'',''│'',[''▕''],[''▏''])}'
-let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▐''],[''▌''])}'
+let w:airline_section_y = '%{noscrollbar#statusline(9,'' '',''█'',[''▕''],[''▌''])}'
 endfunction
 call airline#add_statusline_func('Noscrollbar')
 
@@ -234,6 +272,14 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 """"""""""""""" Airline EXTRAS END """""""""""""""
 
+"""""""""""""" Translator START """"""""""""""
+
+let g:translator_default_engines = "google"
+let g:translator_target_lang = "en"
+ 
+
+"""""""""""""" Translator END """"""""""""""
+
 
 "" Soft scrolling comfortable_motion.vim bindings.
 nnoremap <silent> <PageDown> :call comfortable_motion#flick(100)<CR>
@@ -241,9 +287,9 @@ nnoremap <silent> <PageUp> :call comfortable_motion#flick(-100)<CR>
 
 
 """"" Buffers BG Colors START """""
-"" gruvbox colors: bg #282828, bg0_s #3c3836
+"" gruvbox colors: bg:#282828, bg0_s:#32302f, bg0_h:#1d2021, bg1:#3c3836
 hi ActiveWindow guibg=#282828
-hi InactiveWindow guibg=#32302f
+hi InactiveWindow guibg=#1d2021
 " Call method on window enter
 augroup WindowManagement
   autocmd!
@@ -280,6 +326,12 @@ endfunction
 
 "noremap <silent> <C-n> :NERDTreeToggle<CR>
 
+" Move visually selected or current line of text up or down
+nnoremap K :m .-2<CR>==
+nnoremap J :m .+1<CR>==
+vnoremap K :m '<-2<CR>gv=gv
+vnoremap J :m '>+1<CR>gv=gv
+
 "" Navigating splits, saving a keypress: Ctrl-hjkl. Default C-w+left,right
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
@@ -296,10 +348,10 @@ nnoremap <Space> <Nop>
 nnoremap <silent> <Leader> :LeaderMapper "<Space>"<CR>
 vnoremap <silent> <Leader> :LeaderMapper "<Space>"<CR>
 
-vmap <unique> <A-up>    <Plug>SchleppUp
-vmap <unique> <A-down>  <Plug>SchleppDown
-vmap <unique> <A-left>  <Plug>SchleppLeft
-vmap <unique> <A-right> <Plug>SchleppRight
+" vmap <unique> <A-up>    <Plug>SchleppUp
+" vmap <unique> <A-down>  <Plug>SchleppDown
+" vmap <unique> <A-left>  <Plug>SchleppLeft
+" vmap <unique> <A-right> <Plug>SchleppRight
 
 "" Additional stuff
 "" w!! to save as sudo if file is not owned by user
@@ -346,47 +398,53 @@ let g:webdevicons_enable_nerdtree = 1
 """"""""""""""" vim-leader-mapper START """""""""""""""
 
 "" Create a window of bindings. First a submenu for fuzzysearch.:
-let fzfMenu = {'name':               "FZF Menu",
-\'f': [":Files",                     "FZF file search"],
-\'b': [":Buffers",                   "FZF buffer search"],
-\'s': [":BLines",                    "FZF text search into current buffer"],
-\'S': [":Lines",                     "FZF text search across loaded buffers"],
-\'g': [":BCommits",                  "FZF git commits of the current buffer"],
-\'G': [":Commits",                   "FZF git commits of the repository"],
+let fzfMenu = {'name':               "  FZF Menu",
+\'f':   [":Files",                   "FZF file search"],
+\'b':   [":Buffers",                 "FZF buffer search"],
+\'s':   [":BLines",                  "FZF text search into current buffer"],
+\'S':   [":Lines",                   "FZF text search across loaded buffers"],
+\'g':   [":BCommits",                "FZF git commits of the current buffer"],
+\'G':   [":Commits",                 "FZF git commits of the repository"],
 \}
 
-let keyMenu = {'name': "   Keybindings",
+let keyMenu = {'name':               "   Keybindings",
 \'F12': [':FloatermToggle',          "F12 Floating Terminal"],
-\'F9': [':FloatermNext',             "F9 Floaterm Next"],
-\'F8': [':FloatermPrev',             "F8 Floaterm Previous"],
-\'F7': [':FloatermNew',              "F7 Floaterm New"],
-\'F6': [':FloatermKill',             "F6 Floaterm Kill"],
-\'p': [':FloatermNew bpython',       "bPython"],
-\'l': [':FloatermNew lazygit',       "LazyGit"],
-\'r': [':FloatermNew ranger',        "Ranger"],
+\'F9':  [':FloatermNext',            "F9 Floaterm Next"],
+\'F8':  [':FloatermPrev',            "F8 Floaterm Previous"],
+\'F7':  [':FloatermNew',             "F7 Floaterm New"],
+\'F6':  [':FloatermKill',            "F6 Floaterm Kill"],
+\'E':   [':PaintEraseLine',          ":PaintEraseLine"],
+\'A':   [':PaintEraseAll',           ":PaintEraseAll"],
+\'p':   [':FloatermNew bpython',     "bPython"],
+\'l':   [':FloatermNew lazygit',     "LazyGit"],
+\'r':   [':FloatermNew hunter',      "Hunter File Manager"],
+\'t':   [':FloatermNew vit',         "Taskwarrior:Vit:todo"],
 \}
 
 """ Main menu content including the above menus
 
-let g:leaderMenu = {'name':            "   Main Menu",
-\'f': [fzfMenu,                        "FZF menu"],
-\'k': [keyMenu,                        "Keybindings"],
-\'c': [':Commenter',                   'Comment out selection'],
-\'V': [':vsplit',                      'Split buffer vertically'],
-\'H': [':split',                       'Split buffer horizontally'],
-\'n': [':NERDTreeToggle',              'ToggleNERDtree'],
-\'p': [':Farr',                        'Search and Replace'],
-\'r': [':retab',                       ':retab tabspaces => spaces'],
-\'s': [':Search',                      'Search'],
-\'d': [':bd',                          'Close buffer'],
-\'l': [':ls',                          'List opened buffers'],
-\'q': [':q',                           'Quit Nvim (:q)'],
-\'<': [':foldclose',                   'Close fold (<)'],
-\'>': [':foldopen',                    'Open fold (>)'],
-\'w': [':w',                           'Save file (:w)'],
-\'z': [':set foldlevel=1000',          'Open 1000 folds'],
-\'R': [':so ~/.config/nvim/init.vim',  'Reload init.vim'],
-\'G': [':GitGutterFold',               'Fold Git Changes'],
+let g:leaderMenu = {'name':          "   Main Leader Menu",
+\'f':   [fzfMenu,                    "FZF menu"],
+\'k':   [keyMenu,                    "Keybindings"],
+\'V':   [':vsplit',                  'Split buffer vertically'],
+\'c':   [':Commenter',               'Comment out selection'],
+\'J':   [':JupyterConnect',          'Connect to Jupyter'],
+\'j':   [':JupyterRunFile',          'Send all code to Jupyter'],
+\'H':   [':split',                   'Split buffer horizontally'],
+\'n':   [':NERDTreeToggle',          'ToggleNERDtree'],
+\'p':   [':Farr',                    'Search and Replace'],
+\'r':   [':retab',                   ':retab tabspaces => spaces'],
+\'s':   [':Search',                  'Search'],
+\'l':   [':ls',                      'List opened buffers'],
+\'t':   [':TranslateW',              'Translate'],
+\'d':   [':bd',                      'Close buffer'],
+\'q':   [':q',                       'Quit Nvim (:q)'],
+\'<':   [':foldclose',               'Close fold (<)'],
+\'>':   [':foldopen',                'Open fold (>)'],
+\'w':   [':w',                       'Save file (:w)'],
+\'z':   [':set foldlevel=1000',      'Open 1000 folds'],
+\'R':   [':so $MYVIMRC',             'Reload init.vim'],
+\'G':   [':GitGutterFold',           'Fold Git Changes'],
 \}
 
 """"""""""""""" vim-leader-mapper END """""""""""""""
